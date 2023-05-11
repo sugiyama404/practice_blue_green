@@ -1,5 +1,4 @@
 # practice_blue_green
-practice_blue_green
 
 # Usage
 
