@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+function terraform_apply() {
+  local cwd="$1"
+  cd "${cwd}"
+  cd terraform
+
+  terraform init
+  terraform plan
+  if [ $# -eq 1 ]; then
+    terraform apply --auto-approve
+  else
+    local var="$2"
+    terraform apply --auto-approve -var traffic_distribution="${var}"
+  fi
+}
+
+function main() {
+  local cwd
+  cwd="$(cd "$(dirname "$0")/.." && pwd)"
+  if [ $# -eq 0 ]; then
+    terraform_apply "${cwd}"
+  else
+    local var="$1"
+    terraform_apply "${cwd}" "${var}"
+  fi
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi
